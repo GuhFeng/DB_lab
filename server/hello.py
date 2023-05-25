@@ -16,6 +16,12 @@ def home():
     username = session.get('username')  # Retrieve username from session
     return render_template('main.html', username=username)
 
+@app.route('/user/<uid>')
+def show_user_profile(uid):
+    # show the user profile for that user
+    return render_template('user.html', uid=uid)
+
+
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form.get('username')
@@ -32,18 +38,11 @@ def login():
     else:
         return "Login failed"
 
+@app.route('/profile', methods=['POST'])
+def profile():
+    return redirect(url_for('profile'))
 
-@app.route('/dashboard')
-def dashboard():
-    username = session.get('username')
-
-    if username:
-        return f"Welcome to the dashboard, {username}!"
-    else:
-        return redirect(url_for('home'))
-
-
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
     return redirect(url_for('home'))
