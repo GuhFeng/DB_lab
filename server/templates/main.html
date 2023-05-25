@@ -27,7 +27,16 @@
         </li>
       </ul>
     </div>
-    {% if username %}
+    {% if uid %}
+    <button id="profileButton">View User Profile</button>
+
+    <script>
+      var uid = {{ uid|tojson }};
+      document.getElementById('profileButton').addEventListener('click', function() {
+        window.location.href = '/user/' + uid;
+      });
+    </script>
+
     <form action="/logout" method="POST">
       <div class="navbar-nav ml-auto">
         <li class="nav-item">

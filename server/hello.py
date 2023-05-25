@@ -10,14 +10,17 @@ def log_the_user_in(username):
     # This could include setting session variables, generating tokens, etc.
     session['username'] = username
 
+def getuid(username):
+    return 1
 
 @app.route('/')
 def home():
     username = session.get('username')  # Retrieve username from session
-    return render_template('main.html', username=username)
+    return render_template('main.html', uid=getuid(username))
 
 @app.route('/user/<uid>')
 def show_user_profile(uid):
+    print("uid={}".format(uid))
     # show the user profile for that user
     return render_template('user.html', uid=uid)
 
@@ -34,7 +37,7 @@ def login():
 
     if username == valid_username and password == valid_password:
         log_the_user_in(username)  # Call the login function
-        return redirect(url_for('home', username=username))
+        return redirect(url_for('home'))
     else:
         return "Login failed"
 
