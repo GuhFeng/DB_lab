@@ -11,7 +11,10 @@ def log_the_user_in(username):
     session['username'] = username
 
 def getuid(username):
-    return 1
+    if username=='admin':
+        return 1
+    else:
+        return 0
 
 @app.route('/')
 def home():
@@ -46,8 +49,8 @@ def show_posts():
             'post_text': '鸡你太美！鸡你太美！鸡你实在是太美！'
         }
     }
-    # show the user profile for that user
-    return render_template('posts.html', posts=posts)
+    username = session.get('username')
+    return render_template('posts.html', posts=posts, uid=getuid(username))
 
 @app.route('/users')
 def show_users():
@@ -68,7 +71,8 @@ def show_users():
             'email': 'bobjohnson@example.com'
         }
     }
-    return render_template('users.html', users=users)
+    username = session.get('username')
+    return render_template('users.html', users=users, uid=getuid(username))
 
 @app.route('/login', methods=['POST'])
 def login():

@@ -1,31 +1,26 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-  <title>User List</title>
-</head>
+{% block content %}
 
-<body>
-  <h1>User List</h1>
+<h1>User List</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Username</th>
-        <th>Age</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for user_id, user_info in users.items() %}
-      <tr>
-        <td>{{ user_info['username'] }}</td>
-        <td>{{ user_info['age'] }}</td>
-        <td>{{ user_info['email'] }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</body>
+<table>
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Age</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user_id, user_info in users.items() %}
+    <tr>
+      <td>{{ user_info['username'] }}</td>
+      <td>{{ user_info['age'] }}</td>
+      <td>{{ user_info['email'] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-</html>
+{% endblock %}
