@@ -20,10 +20,42 @@ def home():
 
 @app.route('/user/<uid>')
 def show_user_profile(uid):
-    print("uid={}".format(uid))
+    user_info = get_user_info_by_uid(uid)
     # show the user profile for that user
-    return render_template('user.html', uid=uid)
+    return render_template('user.html', user_info=user_info)
 
+@app.route('/post/<pid>')
+def show_post(pid):
+    post_info = get_post_info_by_pid(pid)
+    # show the user profile for that user
+    return render_template('post.html', post_info=post_info)
+
+@app.route('/posts')
+def show_posts():
+    posts = get_recent_posts()
+    # show the user profile for that user
+    return render_template('posts.html', posts=posts)
+
+@app.route('/users')
+def show_users():
+    users = {
+        'user1': {
+            'username': 'JohnDoe',
+            'age': 25,
+            'email': 'johndoe@example.com'
+        },
+        'user2': {
+            'username': 'JaneSmith',
+            'age': 30,
+            'email': 'janesmith@example.com'
+        },
+        'user3': {
+            'username': 'BobJohnson',
+            'age': 35,
+            'email': 'bobjohnson@example.com'
+        }
+    }
+    return render_template('users.html', users=users)
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -40,10 +72,6 @@ def login():
         return redirect(url_for('home'))
     else:
         return "Login failed"
-
-@app.route('/profile', methods=['POST'])
-def profile():
-    return redirect(url_for('profile'))
 
 @app.route('/logout', methods=['POST'])
 def logout():
