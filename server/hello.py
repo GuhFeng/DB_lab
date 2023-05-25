@@ -32,7 +32,20 @@ def show_post(pid):
 
 @app.route('/posts')
 def show_posts():
-    posts = get_recent_posts()
+    posts = {
+        'post1': {
+            'post_title': '家人们谁懂啊',
+            'post_text': '家人们谁懂啊家人们谁懂啊家人们谁懂啊家人们谁懂啊家人们谁懂啊家人们谁懂啊'
+        },
+        'post2': {
+            'post_title': '松活弹抖闪电鞭',
+            'post_text': '一鞭，二鞭，三鞭，四鞭，五鞭，打了五鞭'
+        },
+        'post3': {
+            'post_title': '鸡你太美',
+            'post_text': '鸡你太美！鸡你太美！鸡你实在是太美！'
+        }
+    }
     # show the user profile for that user
     return render_template('posts.html', posts=posts)
 
