@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- 主要内容 -->
+<div class="container mt-4">
+  <h2>最新帖子</h2>
+  <a class="nav-link" href="/postnew">我要发贴</a>
+  {% for post_id, post_info in posts.items() %}
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{ post_info['PostTitle'] }}</h5>
+      <p class="card-text">{{ post_info['Content'] }}</p>
+      <a class="nav-link" href="{{ url_for('show_post', pid=post_info['ID']) }}">阅读更多</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+<script>
+  function postnew() {
+    var title = document.getElementById('title').value;
+    var content = document.getElementById('content').value;
+
+    if (title == '') {
+      document.getElementById('msg').textContent = '标题不能为空';
+      return;
+    }
+    
+    if (content == '') {
+      document.getElementById('msg').textContent = '内容不能为空';
+      return;
+    }
+
+    document.getElementById('msg').textContent = '';
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/postnew', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          var response = JSON.parse(xhr.responseText);
+          if (response.success) {
+            // Signup success logic
+            console.log('Post successful');
+            // You can redirect the user or perform other actions here
+            window.location.href = '/post/' + response.pid;
+          } else {
+            // Signup error logic
+            var error_message = response.error;
+            document.getElementById('msg').textContent = error_message;
+          }
+        } else {
+          // Handle non-200 response
+          console.log('Signup request failed with status: ' + xhr.status);
+        }
+      }
+    };
+
+    var data = {
+      title: title,
+      content: content
+    };
+
+    xhr.send(JSON.stringify(data));
+  }
+</script>
+
+{% endblock %}

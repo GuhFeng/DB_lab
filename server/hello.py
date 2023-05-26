@@ -6,7 +6,7 @@ import os
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
-import SQL.utils as util
+# import SQL.utils as util
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Set a secret key for session encryption
@@ -68,22 +68,6 @@ def show_post(pid):
 
 @app.route('/posts')
 def show_posts():
-    """
-    posts = {
-        'post1': {
-            'PostTitle': '家人们谁懂啊',
-            'Content': '家人们谁懂啊家人们谁懂啊家人们谁懂啊家人们谁懂啊家人们谁懂啊家人们谁懂啊'
-        },
-        'post2': {
-            'PostTitle': '松活弹抖闪电鞭',
-            'Content': '一鞭，二鞭，三鞭，四鞭，五鞭，打了五鞭'
-        },
-        'post3': {
-            'PostTitle': '鸡你太美',
-            'Content': '鸡你太美！鸡你太美！鸡你实在是太美！'
-        }
-    }
-    """
     currentid = getuid(session.get('username'))
     if currentid == 0:
         return render_template('visitor.html')
@@ -102,6 +86,23 @@ def show_posts():
                            uid=getuid(username),
                            title='最新帖子')
 
+
+@app.route('/postnew', methods=['GET'])
+def postnew():
+    currentid = getuid(session.get('username'))
+    if currentid == 0:
+        return render_template('visitor.html')
+    username = session.get('username')
+    return render_template('postnew.html',
+                           uid=getuid(username),
+                           title='发帖')
+
+@app.route('/postnew', methods=['POST'])
+def postnew():
+    title = request.json.get('title')
+    content = request.json.get('content')
+    pid = add_post(title, content)
+    return jsonify(success=True, pid=pid)
 
 @app.route('/users')
 def show_users():
