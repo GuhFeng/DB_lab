@@ -19,22 +19,31 @@ def getuid(username):
 @app.route('/')
 def home():
     username = session.get('username')  # Retrieve username from session
-    return render_template('main.html', uid=getuid(username))
+    return render_template('main.html', uid=getuid(username), username=username)
 
 @app.route('/user/<uid>')
 def show_user_profile(uid):
+    currentid = getuid(session.get('username'))
+    if currentid == 0:
+        return render_template('visitor.html')
     user_info = get_user_info_by_uid(uid)
     # show the user profile for that user
     return render_template('user.html', user_info=user_info)
 
 @app.route('/post/<pid>')
 def show_post(pid):
+    currentid = getuid(session.get('username'))
+    if currentid == 0:
+        return render_template('visitor.html')
     post_info = get_post_info_by_pid(pid)
     # show the user profile for that user
     return render_template('post.html', post_info=post_info)
 
 @app.route('/posts')
 def show_posts():
+    currentid = getuid(session.get('username'))
+    if currentid == 0:
+        return render_template('visitor.html')
     posts = {
         'post1': {
             'post_title': '家人们谁懂啊',
@@ -54,6 +63,9 @@ def show_posts():
 
 @app.route('/users')
 def show_users():
+    currentid = getuid(session.get('username'))
+    if currentid == 0:
+        return render_template('visitor.html')
     users = {
         'user1': {
             'username': 'JohnDoe',
@@ -103,7 +115,6 @@ def signup():
 def logout():
     session.clear()
     return redirect(url_for('home'))
-
 
 if __name__ == '__main__':
     app.run()
