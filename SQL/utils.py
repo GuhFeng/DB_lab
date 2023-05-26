@@ -76,8 +76,5 @@ def get_following(uid):
     return dct
 
 
-print(get_following(22))
-
-
 def close_conn():
     sql_server_conn.close()
