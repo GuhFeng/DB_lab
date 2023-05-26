@@ -1,29 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <title>Forum</title>
 </head>
+
 <body>
 
   <!-- 导航栏 -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">数据库期中作业</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <li {% if request.path == url_for('home') %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <li {% if request.path==url_for('home') %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
           <a class="nav-link" href="/">首页</a>
         </li>
-        <li {% if request.path == url_for('show_posts') %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <li {% if request.path==url_for('show_posts') %} class="nav-item active" {% else %} class="nav-item" {% endif
+          %}>
           <a class="nav-link" href="/posts">帖子</a>
         </li>
-        
-        <li {% if request.path == url_for('show_users') %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+
+        <li {% if request.path==url_for('show_users') %} class="nav-item active" {% else %} class="nav-item" {% endif
+          %}>
           <a class="nav-link" href="/users">用户</a>
         </li>
       </ul>
@@ -32,8 +37,8 @@
     <button id="profileButton">View User Profile</button>
 
     <script>
-      var uid = {{ uid|tojson }};
-      document.getElementById('profileButton').addEventListener('click', function() {
+      var uid = {{ uid| tojson }};
+      document.getElementById('profileButton').addEventListener('click', function () {
         window.location.href = '/user/' + uid;
       });
     </script>
@@ -48,6 +53,11 @@
     {% else %}
     <div class="navbar-nav ml-auto">
       <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="modal" data-target="#signupModal">注册</a>
+      </li>
+    </div>
+    <div class="navbar-nav ml-auto">
+      <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">登录</a>
       </li>
     </div>
@@ -56,8 +66,48 @@
 
   {% block content %}{% endblock %}
 
+  <!-- 注册模态框 -->
+  <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signupModalLabel">注册</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="signupForm">
+            <div class="form-group">
+              <label for="username">用户名</label>
+              <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名" required>
+            </div>
+            <div class="form-group">
+              <label for="password">密码</label>
+              <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码" required>
+            </div>
+            <div class="form-group">
+              <label for="confirm_password">确认密码</label>
+              <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                placeholder="请再次输入密码" required>
+            </div>
+            <div class="row-thin">
+              <span id="msg"></span>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+              <button type="button" class="btn btn-primary" onclick="signup()">注册</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 登录模态框 -->
-  <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -90,5 +140,50 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    function signup() {
+      var password = document.getElementById('password').value;
+      var confirm_password = document.getElementById('confirm_password').value;
+
+      if (password !== confirm_password) {
+        document.getElementById('msg').textContent = '密码不匹配';
+        return;
+      }
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/signup', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.success) {
+              // Signup success logic
+              console.log('Signup successful');
+              // You can redirect the user or perform other actions here
+              window.location.href = '';
+            } else {
+              // Signup error logic
+              var error_message = response.error;
+              document.getElementById('msg').textContent = error_message;
+            }
+          } else {
+            // Handle non-200 response
+            console.log('Signup request failed with status: ' + xhr.status);
+          }
+        }
+      };
+
+      var data = {
+        username: document.getElementById('username').value,
+        password: password,
+        confirm_password: confirm_password
+      };
+
+      xhr.send(JSON.stringify(data));
+    }
+  </script>
 </body>
+
 </html>
