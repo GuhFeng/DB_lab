@@ -40,7 +40,9 @@ def get_post_info_by_pid(pid):
     rows = list(cursor.fetchall())
     rows = [process_str(row) for row in rows]
     columns = get_columns_name("Post")
-    cursor.execute(f"SELECT Content from [Post Content] WHERE [Post ID]={pid}")
+    cursor.execute(
+        f"SELECT Content from [Post Content] WHERE [Post ID]={pid} ORDER BY [index] "
+    )
     dct = pack(rows, columns)
     dct["Content"] = ["".join([c[0] for c in cursor.fetchall()])]
     return dct
@@ -51,14 +53,30 @@ def get_recent_posts(num):
         f"SELECT TOP {num} [Post ID],[Post time] from [Post] ORDER BY [Post time] DESC"
     )
     rows = list(cursor.fetchall())
-    rows = [int(row[0]) for row in rows]
     columns = get_columns_name("Post")
     dct = {c: [] for c in columns}
     dct["Content"] = []
-    for i in rows:
+    for i in [int(row[0]) for row in rows]:
         for k, v in get_post_info_by_pid(i).items():
             dct[k] += v
     return dct
+
+
+def get_following(uid):
+    cursor.execute(
+        f"SELECT [Followed ID],[Following Time] from [Follow] where [Following ID]={uid} ORDER BY [Following Time]"
+    )
+    rows = list(cursor.fetchall())
+    columns = get_columns_name("User")
+    dct = {c: [] for c in columns}
+    dct["Following Time"] = [row[1] for row in rows]
+    for i in [int((row[0])) for row in rows]:
+        for k, v in get_user_info_by_uid(i).items():
+            dct[k] += v
+    return dct
+
+
+print(get_following(22))
 
 
 def close_conn():
