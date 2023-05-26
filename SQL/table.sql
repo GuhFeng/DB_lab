@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2017                    */
-/* Created on:     5/26/2023 2:06:37 PM                         */
+/* Created on:     5/26/2023 3:16:46 PM                         */
 /*==============================================================*/
 
 
@@ -178,7 +178,8 @@ create table Comment
    "Post ID" numeric(10) null,
    "Coment ID" int null,
    "Comment Time" datetime null
-      constraint "CKC_COMMENT TIME_COMMENT" check ("Comment Time" is null or ("Comment Time" between '2000-1-1 0:0:0' and '2099-12-31 11:59:59'))
+      constraint "CKC_COMMENT TIME_COMMENT" check ("Comment Time" is null or ("Comment Time" between '2000-1-1 0:0:0' and '2099-12-31 11:59:59')),
+   Comment_Content text null
 )
 go
 
