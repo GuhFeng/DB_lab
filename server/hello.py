@@ -1,5 +1,5 @@
 # py -m flask --app hello run --debug
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, request
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Set a secret key for session encryption
@@ -89,6 +89,13 @@ def login():
         return redirect(url_for('home'))
     else:
         return "Login failed"
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    print("signup called\n")
+    username = request.json.get('username')
+    password = request.json.get('password')
+    return jsonify(success=True)
 
 @app.route('/logout', methods=['POST'])
 def logout():
