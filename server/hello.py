@@ -1,5 +1,11 @@
 # py -m flask --app hello run --debug
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify, request
+import sys
+import os
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+import SQL.utils
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Set a secret key for session encryption
@@ -19,7 +25,7 @@ def getuid(username):
 @app.route('/')
 def home():
     username = session.get('username')  # Retrieve username from session
-    return render_template('main.html', uid=getuid(username), username=username)
+    return render_template('main.html', uid=getuid(username), username=username, title='首页')
 
 @app.route('/user/<uid>')
 def show_user_profile(uid):
@@ -28,7 +34,7 @@ def show_user_profile(uid):
         return render_template('visitor.html')
     user_info = get_user_info_by_uid(uid)
     # show the user profile for that user
-    return render_template('user.html', user_info=user_info)
+    return render_template('user.html', user_info=user_info, title='用户信息')
 
 @app.route('/post/<pid>')
 def show_post(pid):
@@ -37,7 +43,7 @@ def show_post(pid):
         return render_template('visitor.html')
     post_info = get_post_info_by_pid(pid)
     # show the user profile for that user
-    return render_template('post.html', post_info=post_info)
+    return render_template('post.html', post_info=post_info, title=post_info['PostTitle'])
 
 @app.route('/posts')
 def show_posts():
@@ -59,7 +65,7 @@ def show_posts():
         }
     }
     username = session.get('username')
-    return render_template('posts.html', posts=posts, uid=getuid(username))
+    return render_template('posts.html', posts=posts, uid=getuid(username), title='最新帖子')
 
 @app.route('/users')
 def show_users():
@@ -84,7 +90,7 @@ def show_users():
         }
     }
     username = session.get('username')
-    return render_template('users.html', users=users, uid=getuid(username))
+    return render_template('users.html', users=users, uid=getuid(username), title='我的关注')
 
 @app.route('/login', methods=['POST'])
 def login():
