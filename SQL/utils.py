@@ -1,6 +1,4 @@
 import pyodbc
-import datetime
-from decimal import Decimal
 
 sql_server_conn = pyodbc.connect(
     "DRIVER={SQL Server};SERVER=127.0.0.1;DATABASE=BBS;UID=fgh;PWD=1234")
