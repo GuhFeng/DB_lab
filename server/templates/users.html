@@ -5,28 +5,17 @@
 <div class="container mt-4">
     <h1>User List</h1>
 
-    <table class="table table-bordered">
-      <thead class="thead-dark">
-        <tr>
-          <th>Username</th>
-          <th>Age</th>
-          <th>Email</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>John Doe</td>
-          <td>30</td>
-          <td>johndoe@example.com</td>
-        </tr>
-        <tr>
-          <td>Jane Smith</td>
-          <td>25</td>
-          <td>janesmith@example.com</td>
-        </tr>
-        <!-- Add more rows for other users -->
-      </tbody>
-    </table>
+    <div class="container mt-4">
+	  <h2>关注的人</h2>
+	  {% for user_id, user in users.items() %}
+	  <div class="card">
+		  <div class="card-body">
+        {% for k,v in user.items() %}
+			<p class="card-text">{{k}}  {{ v}}</p>
+			{% endfor %}
+		  </div>
+	  </div>
+	  {% endfor %}
   </div>
 
 {% endblock %}

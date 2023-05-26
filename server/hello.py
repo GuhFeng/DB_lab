@@ -87,7 +87,7 @@ def show_posts():
     currentid = getuid(session.get('username'))
     if currentid == 0:
         return render_template('visitor.html')
-    posts = util.get_recent_posts(5)
+    posts = util.get_recent_posts(100)
     posts = {
         f'post{i}': {
             'PostTitle': posts['PostTitle'][i],
@@ -108,22 +108,12 @@ def show_users():
     currentid = getuid(session.get('username'))
     if currentid == 0:
         return render_template('visitor.html')
+    users = util.get_following(22)
+    ks = users.keys()
     users = {
-        'user1': {
-            'username': 'JohnDoe',
-            'age': 25,
-            'email': 'johndoe@example.com'
-        },
-        'user2': {
-            'username': 'JaneSmith',
-            'age': 30,
-            'email': 'janesmith@example.com'
-        },
-        'user3': {
-            'username': 'BobJohnson',
-            'age': 35,
-            'email': 'bobjohnson@example.com'
-        }
+        f'user{i}': {k: users[k][i]
+                     for k in ks}
+        for i in range(len(users["User ID"]))
     }
     username = session.get('username')
     return render_template('users.html',
