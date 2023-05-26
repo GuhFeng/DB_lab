@@ -78,14 +78,14 @@
           </button>
         </div>
         <div class="modal-body">
-          <form id="signupForm">
+          <form id="signupForm" method="POST">
             <div class="form-group">
-              <label for="username">用户名</label>
-              <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名" required>
+              <label for="signup_username">用户名</label>
+              <input type="text" class="form-control" id="signup_username" name="username" placeholder="请输入用户名" required>
             </div>
             <div class="form-group">
-              <label for="password">密码</label>
-              <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码" required>
+              <label for="signup_password">密码</label>
+              <input type="password" class="form-control" id="signup_password" name="password" placeholder="请输入密码" required>
             </div>
             <div class="form-group">
               <label for="confirm_password">确认密码</label>
@@ -93,7 +93,7 @@
                 placeholder="请再次输入密码" required>
             </div>
             <div class="row-thin">
-              <span id="msg"></span>
+              <span id="signup_msg"></span>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
@@ -117,18 +117,21 @@
           </button>
         </div>
         <div class="modal-body">
-          <form action="/login" method="POST">
+          <form id="loginForm" method="POST">
             <div class="form-group">
-              <label for="username">用户名</label>
-              <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名" required>
+              <label for="login_username">用户名</label>
+              <input type="text" class="form-control" id="login_username" name="username" placeholder="请输入用户名" required>
             </div>
             <div class="form-group">
-              <label for="password">密码</label>
-              <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码" required>
+              <label for="login_password">密码</label>
+              <input type="password" class="form-control" id="login_password" name="password" placeholder="请输入密码" required>
+            </div>
+            <div class="row-thin">
+              <span id="login_msg"></span>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-              <button type="submit" class="btn btn-primary">登录</button>
+              <button type="button" class="btn btn-primary" onclick="login()">登录</button>
             </div>
           </form>
         </div>
@@ -142,14 +145,15 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     function signup() {
-      var password = document.getElementById('password').value;
+      var password = document.getElementById('signup_password').value;
       var confirm_password = document.getElementById('confirm_password').value;
 
       if (password !== confirm_password) {
-        document.getElementById('msg').textContent = '密码不匹配';
+        document.getElementById('signup_msg').textContent = '密码不匹配';
         return;
       }
 
+      document.getElementById('signup_msg').textContent = '';
       var xhr = new XMLHttpRequest();
       xhr.open('POST', '/signup', true);
       xhr.setRequestHeader('Content-Type', 'application/json');
@@ -166,7 +170,7 @@
             } else {
               // Signup error logic
               var error_message = response.error;
-              document.getElementById('msg').textContent = error_message;
+              document.getElementById('signup_msg').textContent = error_message;
             }
           } else {
             // Handle non-200 response
@@ -176,11 +180,49 @@
       };
 
       var data = {
-        username: document.getElementById('username').value,
+        username: document.getElementById('signup_username').value,
         password: password,
         confirm_password: confirm_password
       };
 
+      xhr.send(JSON.stringify(data));
+    }
+  </script>
+  <script>
+    function login() {
+      var username = document.getElementById('login_username').value;
+      var password = document.getElementById('login_password').value;
+  
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/login', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+  
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.success) {
+              // Login success logic
+              console.log('Login successful');
+              // You can redirect the user or perform other actions here
+              window.location.href = '';
+            } else {
+              // Login error logic
+              var error_message = response.error;
+              document.getElementById('login_msg').textContent = error_message;
+            }
+          } else {
+            // Handle non-200 response
+            console.log('Login request failed with status: ' + xhr.status);
+          }
+        }
+      };
+  
+      var data = {
+        username: username,
+        password: password
+      };
+  
       xhr.send(JSON.stringify(data));
     }
   </script>

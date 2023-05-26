@@ -76,8 +76,9 @@ def show_users():
 
 @app.route('/login', methods=['POST'])
 def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
+    username = request.json.get('username')
+    password = request.json.get('password')
+    print("login {} {}".format(username, password))
 
     # Check if the username and password match a database record
     # For the sake of simplicity, let's assume a hardcoded username and password
@@ -86,15 +87,16 @@ def login():
 
     if username == valid_username and password == valid_password:
         log_the_user_in(username)  # Call the login function
-        return redirect(url_for('home'))
+        return jsonify(success=True)
     else:
-        return "Login failed"
+        return jsonify(error="用户名或密码不正确")
 
 @app.route('/signup', methods=['POST'])
 def signup():
-    print("signup called\n")
     username = request.json.get('username')
     password = request.json.get('password')
+    print("signup {} {}".format(username, password))
+    # Store it in database
     return jsonify(success=True)
 
 @app.route('/logout', methods=['POST'])
