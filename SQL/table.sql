@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2017                    */
-/* Created on:     5/4/2023 2:55:29 PM                          */
+/* Created on:     5/26/2023 2:06:37 PM                         */
 /*==============================================================*/
 
 
@@ -20,16 +20,16 @@ go
 
 if exists (select 1
 from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-where r.fkeyid = object_id('Follow') and o.name = 'FK_FOLLOW_FOLLOW_USER')
+where r.fkeyid = object_id('Follow') and o.name = 'FK_FOLLOW_FOLLOWED_USER')
 alter table Follow
-   drop constraint FK_FOLLOW_FOLLOW_USER
+   drop constraint FK_FOLLOW_FOLLOWED_USER
 go
 
 if exists (select 1
 from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-where r.fkeyid = object_id('Follow') and o.name = 'FK_FOLLOW_REFERENCE_USER')
+where r.fkeyid = object_id('Follow') and o.name = 'FK_FOLLOW_FOLLOWING_USER')
 alter table Follow
-   drop constraint FK_FOLLOW_REFERENCE_USER
+   drop constraint FK_FOLLOW_FOLLOWING_USER
 go
 
 if exists (select 1
@@ -51,13 +51,6 @@ from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type =
 where r.fkeyid = object_id('"Post Content"') and o.name = 'FK_POST CON_CONSIST_POST')
 alter table "Post Content"
    drop constraint "FK_POST CON_CONSIST_POST"
-go
-
-if exists (select 1
-from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-where r.fkeyid = object_id('"Post Content"') and o.name = 'FK_POST CON_USER_USER')
-alter table "Post Content"
-   drop constraint "FK_POST CON_USER_USER"
 go
 
 if exists (select 1
@@ -90,6 +83,24 @@ from sysobjects
 where  id = object_id('Comment')
    and type = 'U')
    drop table Comment
+go
+
+if exists (select 1
+from sysindexes
+where  id    = object_id('Follow')
+   and name  = 'Followed_FK'
+   and indid > 0
+   and indid < 255)
+   drop index Follow.Followed_FK
+go
+
+if exists (select 1
+from sysindexes
+where  id    = object_id('Follow')
+   and name  = 'Following_FK'
+   and indid > 0
+   and indid < 255)
+   drop index Follow.Following_FK
 go
 
 if exists (select 1
@@ -196,11 +207,30 @@ go
 /*==============================================================*/
 create table Follow
 (
-   "Follower Time" datetime null,
-   "User ID" numeric(15) not null,
-   "Followerr ID" numeric(15) not null,
-   constraint PK_FOLLOW primary key ("User ID", "Followerr ID")
+   "Followed ID" numeric(15) null,
+   "Following ID" numeric(15) null,
+   "Following Time" datetime null
 )
+go
+
+/*==============================================================*/
+/* Index: Following_FK                                          */
+/*==============================================================*/
+
+
+
+
+create nonclustered index Following_FK on Follow ("Following ID" ASC)
+go
+
+/*==============================================================*/
+/* Index: Followed_FK                                           */
+/*==============================================================*/
+
+
+
+
+create nonclustered index Followed_FK on Follow ("Followed ID" ASC)
 go
 
 /*==============================================================*/
@@ -244,7 +274,6 @@ go
 create table "Post Content"
 (
    "Post ID" numeric(10) null,
-   "User ID" numeric(15) null,
    "Index" int null,
    Content text null
 )
@@ -289,12 +318,12 @@ alter table Comment
 go
 
 alter table Follow
-   add constraint FK_FOLLOW_FOLLOW_USER foreign key ("User ID")
+   add constraint FK_FOLLOW_FOLLOWED_USER foreign key ("Followed ID")
       references "User" ("User ID")
 go
 
 alter table Follow
-   add constraint FK_FOLLOW_REFERENCE_USER foreign key ("Followerr ID")
+   add constraint FK_FOLLOW_FOLLOWING_USER foreign key ("Following ID")
       references "User" ("User ID")
 go
 
@@ -311,10 +340,5 @@ go
 alter table "Post Content"
    add constraint "FK_POST CON_CONSIST_POST" foreign key ("Post ID")
       references Post ("Post ID")
-go
-
-alter table "Post Content"
-   add constraint "FK_POST CON_USER_USER" foreign key ("User ID")
-      references "User" ("User ID")
 go
 
