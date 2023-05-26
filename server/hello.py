@@ -5,7 +5,7 @@ import os
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
-import SQL.utils
+# import SQL.utils
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Set a secret key for session encryption
