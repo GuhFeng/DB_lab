@@ -47,11 +47,13 @@ def show_user_profile(uid):
 
 @app.route('/post/<pid>')
 def show_post(pid):
+    print(pid)
     currentid = getuid(session.get('username'))
     if currentid == 0:
         return render_template('visitor.html')
     post_info = util.get_post_info_by_pid(pid)
-    reply = util.get_comment_info_by_pid(pid)
+    reply = util.get_comment_info_by_pid(2)
+    print(reply)
     post_info = {k: v[0] for k, v in post_info.items()}
     reply_info = {
         f'reply{i}': {
@@ -89,7 +91,8 @@ def show_posts():
     posts = {
         f'post{i}': {
             'PostTitle': posts['PostTitle'][i],
-            'Content': posts['Content'][i]
+            'Content': posts['Content'][i],
+            'ID': posts['Post ID'][i]
         }
         for i in range(len(posts["Content"]))
     }
@@ -164,3 +167,4 @@ def logout():
 
 if __name__ == '__main__':
     app.run()
+    util.close_conn()

@@ -10,7 +10,7 @@
 		<div class="card-body">
 			<h5 class="card-title">{{ post_info['PostTitle'] }}</h5>
 			<p class="card-text">{{ post_info['Content'] }}</p>
-			<a href="#" class="btn btn-primary">阅读更多</a>
+          <a class="nav-link" href="{{ url_for('show_post', pid=post_info['ID']) }}">帖子</a>
 		</div>
 	</div>
 	{% endfor %}
