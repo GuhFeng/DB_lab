@@ -90,7 +90,22 @@ def get_comment_info_by_pid(pid):
     return dct
 
 
-print(get_comment_info_by_pid(1))
+def user_register(info: dict):
+    columns = ",".join([f"[{i}]" for i in info.keys()])
+    values = ",".join(
+        [str(i) if type(i) != str else f"'{i}'" for i in info.values()])
+    print(f"INSERT INTO [User] ({columns}) VALUES ({values})")
+    cursor.execute(f"INSERT INTO [User] ({columns}) VALUES ({values})")
+    cursor.commit()
+
+
+def insert_item(table, itm: dict):
+    columns = ",".join([f"[{i}]" for i in itm.keys()])
+    values = ",".join(
+        [str(i) if type(i) != str else f"'{i}'" for i in itm.values()])
+    print(f"INSERT INTO [{table}] ({columns}) VALUES ({values})")
+    cursor.execute(f"INSERT INTO [User] ({columns}) VALUES ({values})")
+    cursor.commit()
 
 
 def close_conn():

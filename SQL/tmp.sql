@@ -1,4 +1,10 @@
-SELECT [Comment_Content], [Comment Time]
-from Comment
-where [Post ID]=1
-ORDER BY [Comment Time]
+DELETE FROM [User]
+WHERE [User ID]>100;
+
+SELECT *
+FROM [User];
+
+INSERT INTO [User]
+    ([User ID],[User Name],[Creating Time])
+VALUES
+    (101, 'fgh', '2036-04-13 18:55:22'); 
