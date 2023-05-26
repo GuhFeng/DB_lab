@@ -8,9 +8,9 @@
 	{% for post_id, post_info in posts.items() %}
 	<div class="card">
 		<div class="card-body">
-			<h5 class="card-title">{{ post_info['post_title'] }}</h5>
-			<p class="card-text">{{ post_info['post_text'] }}</p>
-			<a href="/post/{{post_id}}" class="btn btn-primary">阅读更多</a>
+			<h5 class="card-title">{{ post_info['PostTitle'] }}</h5>
+			<p class="card-text">{{ post_info['Content'] }}</p>
+          <a class="nav-link" href="{{ url_for('show_post', pid=post_info['ID']) }}">阅读更多</a>
 		</div>
 	</div>
 	{% endfor %}

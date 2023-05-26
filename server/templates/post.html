@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+	<h2>帖子</h2>
+	<div class="card">
+		<div class="card-body">
+			{% for k,v in post_info.items() %}
+			<p class="card-text">{{k}}  {{ v}}</p>
+			{% endfor %}
+		</div>
+	</div>
+
+</div>
+
+<!-- 主要内容 -->
+<div class="container mt-4">
+	<h2>回复</h2>
+	{% for reply_id, reply_info in replys.items() %}
+	<div class="card">
+		<div class="card-body">
+			<p class="card-text">{{ reply_info['Content'] }}</p>
+			<p class="card-text">{{ reply_info['Time'] }}</p>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+{% endblock %}
