@@ -75,6 +75,28 @@ def show_post(pid):
                            follwed=util.if_follow(currentid,
                                                   post_info['User ID']))
 
+@app.route('/follow')
+def follow():
+    uid = getuid(session.get('username'))
+    targetid = request.json.get('targetid')
+    print("{} follows {}".format(uid, targetid))
+    if if_follow(uid, targetuid):
+        return jsonify(error='您已关注')
+    add_follow(uid, targetid)
+    
+    return jsonify(success=True)
+
+@app.route('/disfollow')
+def follow():
+    uid = getuid(session.get('username'))
+    targetid = request.json.get('targetid')
+    print("{} disfollows {}".format(uid, targetid))
+    if not if_follow(uid, targetuid):
+        return jsonify(error='您未关注')
+    add_follow(uid, targetid)
+    
+    return jsonify(success=True)
+
 
 @app.route('/posts')
 def show_posts():
