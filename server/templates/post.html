@@ -14,17 +14,26 @@
 
 </div>
 
+
+	<div class="navbar-nav ml-auto">
+      	<li class="nav-item">
+        	<a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">回复</a>
+      	</li>
+	</div>
+
+
 <!-- 主要内容 -->
 <div class="container mt-4">
   <h2>回复</h2>
-  {% for reply_id, reply_info in replys.items() %}
-  <div class="card">
-    <div class="card-body">
-      <p class="card-text">{{ reply_info['Content'] }}</p>
-      <p class="card-text">{{ reply_info['Time'] }}</p>
-    </div>
-  </div>
-  {% endfor %}
+	{% for reply_id, reply_info in replys.items() %}
+	<div class="card">
+		<div class="card-body">
+			<p class="card-text">时间: {{ reply_info['Content'] }}</p>
+			<p class="card-text">用户: {{ reply_info['User'] }}</p>
+			<p class="card-text">回复： {{ reply_info['Time'] }}</p>
+		</div>
+	</div>
+	{% endfor %}
 </div>
 
 <div class="container mt-4">
@@ -120,5 +129,87 @@
   </style>
 
 </div>
+
+
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">我要回复</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="loginForm" method="POST">
+            <div class="form-group">
+              <label for="login_password">内容</label>
+              <input type="text" class="form-control" id="content" name="content" placeholder="请输入内容" required>
+            </div>
+            <div class="row-thin">
+              <span id="msg"></span>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-primary" onclick="replynew()">回复</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+  function postnew() {
+    var title = document.getElementById('title').value;
+    var content = document.getElementById('content').value;
+
+    if (title == '') {
+      document.getElementById('msg').textContent = '标题不能为空';
+      return;
+    }
+    
+    if (content == '') {
+      document.getElementById('msg').textContent = '内容不能为空';
+      return;
+    }
+
+    document.getElementById('msg').textContent = '';
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/replynew', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          var response = JSON.parse(xhr.responseText);
+          if (response.success) {
+            // Signup success logic
+            console.log('Post successful');
+            // You can redirect the user or perform other actions here
+            window.location.href = '/post/' + response.pid;
+          } else {
+            // Signup error logic
+            var error_message = response.error;
+            document.getElementById('msg').textContent = error_message;
+          }
+        } else {
+          // Handle non-200 response
+          console.log('Signup request failed with status: ' + xhr.status);
+        }
+      }
+    };
+
+    var data = {
+      title: title,
+      content: content
+    };
+
+    xhr.send(JSON.stringify(data));
+  }
+</script>
 
 {% endblock %}
