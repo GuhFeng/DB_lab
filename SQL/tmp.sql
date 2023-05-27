@@ -2,7 +2,7 @@ DELETE FROM [User]
 WHERE [User ID]>100;
 
 SELECT *
-FROM [User];
+FROM [Comment];
 
 INSERT INTO [User]
     ([User ID],[User Name],[Creating Time])

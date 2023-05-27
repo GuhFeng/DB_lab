@@ -51,12 +51,19 @@ def show_post(pid):
     if currentid == 0:
         return render_template('visitor.html')
     post_info = util.get_post_info_by_pid(pid)
-    reply = util.get_comment_info_by_pid(2)
+    reply = util.get_comment_info_by_pid(pid)
+    user_id = reply["User ID"]
+    user_names = [
+        util.get_user_info_by_uid(uid)['User Name'][0] for uid in user_id
+    ]
     post_info = {k: v[0] for k, v in post_info.items()}
+    post_info['User'] = util.get_user_info_by_uid(
+        post_info['User ID'][0])['User Name'][0]
     reply_info = {
         f'reply{i}': {
             'Time': reply['Comment_Content'][i],
-            'Content': reply['Comment Time'][i]
+            'Content': reply['Comment Time'][i],
+            'User': user_names[i]
         }
         for i in range(len(reply["Comment_Content"]))
     }
@@ -70,11 +77,16 @@ def show_posts():
     if currentid == 0:
         return render_template('visitor.html')
     posts = util.get_recent_posts(100)
+    user_id = posts["User ID"]
+    user_names = [
+        util.get_user_info_by_uid(uid)['User Name'][0] for uid in user_id
+    ]
     posts = {
         f'post{i}': {
             'PostTitle': posts['PostTitle'][i],
             'Content': posts['Content'][i],
-            'ID': posts['Post ID'][i]
+            'ID': posts['Post ID'][i],
+            'User': user_names[i]
         }
         for i in range(len(posts["Content"]))
     }

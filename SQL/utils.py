@@ -76,7 +76,7 @@ def get_following(uid):
 
 def get_comment_info_by_pid(pid):
     cursor.execute(
-        f"SELECT [Comment_Content],[Comment Time] from Comment where [Post ID]={pid} ORDER BY [Comment Time]"
+        f"SELECT [Comment_Content],[Comment Time],[User ID] from Comment where [Post ID]={pid} ORDER BY [Comment Time]"
     )
     rows = list(cursor.fetchall())
     rows = [process_str(row) for row in rows]
@@ -85,7 +85,8 @@ def get_comment_info_by_pid(pid):
     )
     dct = {
         "Comment_Content": [c[0] for c in rows],
-        "Comment Time": [c[1] for c in rows]
+        "Comment Time": [c[1] for c in rows],
+        "User ID": [c[2] for c in rows]
     }
     return dct
 
