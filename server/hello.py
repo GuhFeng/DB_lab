@@ -15,7 +15,6 @@ app.secret_key = "your_secret_key"  # Set a secret key for session encryption
 def log_the_user_in(username):
     # Perform necessary actions to log the user in
     # This could include setting session variables, generating tokens, etc.
-    print("\nlogin seccuss")
     session['username'] = username
 
 
@@ -57,9 +56,10 @@ def show_post(pid):
         util.get_user_info_by_uid(uid)['User Name'][0] for uid in user_id
     ]
     print(post_info)
-    post_info = {k: v[0] if v != None else None for k, v in post_info.items()}
+    post_info = {k: v[0] for k, v in post_info.items()}
+    print(post_info['User ID'])
     post_info['User'] = util.get_user_info_by_uid(
-        post_info['User ID'][0])['User Name'][0]
+        post_info['User ID'])['User Name'][0]
     reply_info = {
         f'reply{i}': {
             'Time': reply['Comment_Content'][i],
