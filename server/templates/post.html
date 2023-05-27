@@ -94,7 +94,7 @@
             if (response.error == '您未关注') {
               // You can redirect the user or perform other actions here
               document.getElementById("follow").innerHTML = `
-                <button id="disFollowButton" class="btn btn-secondary" onclick="disfollow({{post_info['User ID']}})">已关注</button>
+                <button id="followButton" class="btn btn-primary" onclick="follow({{post_info['User ID']}})">+关注</button>
               `;
             }
           }

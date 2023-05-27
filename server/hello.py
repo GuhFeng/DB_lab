@@ -72,8 +72,8 @@ def show_post(pid):
                            post_info=post_info,
                            pid=pid,
                            uid=currentid,
-                           follwed=util.if_follow(currentid,
-                                                  post_info['User ID']))
+                           followed=util.if_follow(currentid,
+                                                   post_info['User ID']))
 
 
 @app.route('/follow', methods=['POST'])
