@@ -122,6 +122,20 @@ def postnew():
     return jsonify(success=True, pid=pid)
 
 
+@app.route('/replynew', methods=['POST'])
+def replynew():
+    username = session.get('username')
+    uid = getuid(username)
+    content = request.json.get('content')
+    print('content')
+    util.add_comment({
+        "User ID": uid,
+        "Post ID": 102,
+        "Comment_Content": content
+    })
+    return jsonify(success=True, pid=102)
+
+
 @app.route('/users')
 def show_users():
     currentid = getuid(session.get('username'))
