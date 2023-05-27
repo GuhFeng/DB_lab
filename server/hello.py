@@ -63,7 +63,7 @@ def show_post(pid):
         for i in range(len(reply["Comment_Content"]))
     }
     # show the user profile for that user
-    return render_template('post.html', replys=reply_info, post_info=post_info)
+    return render_template('post.html', replys=reply_info, post_info=post_info, pid=pid)
 
 
 @app.route('/posts')

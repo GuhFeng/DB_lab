@@ -3,28 +3,122 @@
 {% block content %}
 
 <div class="container mt-4">
-	<h2>帖子</h2>
-	<div class="card">
-		<div class="card-body">
-			{% for k,v in post_info.items() %}
-			<p class="card-text">{{k}}  {{ v}}</p>
-			{% endfor %}
-		</div>
-	</div>
+  <h2>帖子</h2>
+  <div class="card">
+    <div class="card-body">
+      {% for k,v in post_info.items() %}
+      <p class="card-text">{{k}} {{ v}}</p>
+      {% endfor %}
+    </div>
+  </div>
 
 </div>
 
 <!-- 主要内容 -->
 <div class="container mt-4">
-	<h2>回复</h2>
-	{% for reply_id, reply_info in replys.items() %}
-	<div class="card">
-		<div class="card-body">
-			<p class="card-text">{{ reply_info['Content'] }}</p>
-			<p class="card-text">{{ reply_info['Time'] }}</p>
-		</div>
-	</div>
-	{% endfor %}
+  <h2>回复</h2>
+  {% for reply_id, reply_info in replys.items() %}
+  <div class="card">
+    <div class="card-body">
+      <p class="card-text">{{ reply_info['Content'] }}</p>
+      <p class="card-text">{{ reply_info['Time'] }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="container mt-4">
+  <div class="card">
+    <div id="replySection">
+      <div class="card-body">
+        <button id="replyButton" class="btn btn-primary" onclick="showReplyForm()">我要回帖</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showReplyForm() {
+      // Replace the reply button with the reply form
+      document.getElementById("replySection").innerHTML = `
+        <div class="card-body">
+          <textarea id="replyText" class="card-text reply-textarea" placeholder="请输入内容"></textarea>
+        </div>
+        <div class="row-thin">
+          <span id="msg"></span>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-primary" onclick="postReply()">发布</button>
+          <button class="btn btn-secondary" onclick="cancelReply()">取消</button>
+        </div>
+      `;
+    }
+
+    function postReply() {
+      // Get the reply text from the textarea and send a request to the server
+      var replyText = document.getElementById("replyText").value;
+      // Send the reply text to the server using XMLHttpRequest or fetch
+      if (replyText == '') {
+        document.getElementById('msg').textContent = '内容不能为空';
+        return;
+      }
+
+      document.getElementById('msg').textContent = '';
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/reply', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.success) {
+              // Signup success logic
+              console.log('Reply successful');
+              // You can redirect the user or perform other actions here
+              window.location.href = '/post/' + pid;
+            } else {
+              // Signup error logic
+              var error_message = response.error;
+              document.getElementById('msg').textContent = error_message;
+            }
+          } else {
+            // Handle non-200 response
+            console.log('Reply request failed with status: ' + xhr.status);
+          }
+        }
+      };
+
+      var data = {
+        replyText: replyText
+        // add uid here
+      };
+
+      xhr.send(JSON.stringify(data));
+    }
+
+    function cancelReply() {
+      // Reset the page to the original form
+      resetReplyForm();
+    }
+
+    function resetReplyForm() {
+      // Replace the reply form with the reply button
+      document.getElementById("replySection").innerHTML = `
+        <div class="card-body">
+          <button id="replyButton" class="btn btn-primary" onclick="showReplyForm()">我要回帖</button>
+        </div>
+      `;
+    }
+  </script>
+
+  <style>
+    .reply-textarea {
+      width: 100%;
+      height: 200px;
+      resize: vertical;
+    }
+  </style>
+
 </div>
 
 {% endblock %}
