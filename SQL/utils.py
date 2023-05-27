@@ -150,7 +150,7 @@ def add_post(info: dict):
 def add_comment(info):
     cursor.execute("SELECT COUNT(*) FROM [Comment]")
     num = list(cursor.fetchall())
-    info["Comment ID"] = num[0][0] + 1
+    info["Coment ID"] = num[0][0] + 1
     info['Comment Time'] = get_time()
     insert_item('Comment', info)
 

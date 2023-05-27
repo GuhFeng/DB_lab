@@ -47,9 +47,11 @@
         <div class="card-body">
           <textarea id="replyText" class="card-text reply-textarea" placeholder="请输入内容"></textarea>
         </div>
+        <div class="card-body">
         <div class="row-thin">
           <span id="msg"></span>
         </div>
+      </div>
         <div class="card-body">
           <button class="btn btn-primary" onclick="postReply('{{ pid }}','{{ uid }}')">发布</button>
           <button class="btn btn-secondary" onclick="cancelReply()">取消</button>
@@ -93,8 +95,8 @@
       };
 
       var data = {
-        replyText: replyText
-        pid: pid
+        replyText: replyText,
+        pid: pid,
         uid: uid
         // add uid here
       };

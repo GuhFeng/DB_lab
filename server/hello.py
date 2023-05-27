@@ -126,9 +126,10 @@ def postnew():
 
 @app.route('/reply', methods=['POST'])
 def reply():
-    uid = session.get('uid')
-    pid = session.get('pid')
+    uid = request.json.get('uid')
+    pid = request.json.get('pid')
     content = request.json.get('replyText')
+    print(uid, pid, content)
     util.add_comment({
         "User ID": uid,
         "Post ID": pid,
