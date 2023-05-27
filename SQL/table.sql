@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2017                    */
-/* Created on:     5/26/2023 3:16:46 PM                         */
+/* Created on:     5/27/2023 9:33:00 PM                         */
 /*==============================================================*/
 
 
@@ -152,6 +152,15 @@ where  id = object_id('"Post Content"')
 go
 
 if exists (select 1
+from sysindexes
+where  id    = object_id('"User"')
+   and name  = 'Name'
+   and indid > 0
+   and indid < 255)
+   drop index "User".Name
+go
+
+if exists (select 1
 from sysobjects
 where  id = object_id('"User"')
    and type = 'U')
@@ -175,11 +184,12 @@ go
 create table Comment
 (
    "User ID" numeric(15) null,
-   "Post ID" numeric(10) null,
-   "Coment ID" int null,
+   "Post ID" numeric(10) not null,
+   "Coment ID" int not null,
    "Comment Time" datetime null
       constraint "CKC_COMMENT TIME_COMMENT" check ("Comment Time" is null or ("Comment Time" between '2000-1-1 0:0:0' and '2099-12-31 11:59:59')),
-   Comment_Content text null
+   Comment_Content text null,
+   constraint PK_COMMENT primary key ("Post ID", "Coment ID")
 )
 go
 
@@ -208,9 +218,10 @@ go
 /*==============================================================*/
 create table Follow
 (
-   "Followed ID" numeric(15) null,
-   "Following ID" numeric(15) null,
-   "Following Time" datetime null
+   "Followed ID" numeric(15) not null,
+   "Following ID" numeric(15) not null,
+   "Following Time" datetime null,
+   constraint PK_FOLLOW primary key ("Followed ID", "Following ID")
 )
 go
 
@@ -274,9 +285,10 @@ go
 /*==============================================================*/
 create table "Post Content"
 (
-   "Post ID" numeric(10) null,
-   "Index" int null,
-   Content text null
+   "Post ID" numeric(10) not null,
+   "Index" int not null,
+   Content text null,
+   constraint "PK_POST CONTENT" primary key ("Post ID", "Index")
 )
 go
 
@@ -306,6 +318,16 @@ create table "User"
       constraint "CKC_CREATING TIME_USER" check ("Creating Time" is null or ("Creating Time" between '2000-1-1 0:0:0' and '2099-12-31 11:59:59')),
    constraint PK_USER primary key ("User ID")
 )
+go
+
+/*==============================================================*/
+/* Index: Name                                                  */
+/*==============================================================*/
+
+
+
+
+create unique nonclustered index Name on "User" ("User Name" ASC)
 go
 
 alter table Comment

@@ -1,5 +1,6 @@
 import pyodbc
 from datetime import datetime
+import re
 
 sql_server_conn = pyodbc.connect(
     "DRIVER={SQL Server};SERVER=127.0.0.1;DATABASE=BBS;UID=fgh;PWD=1234")
@@ -157,6 +158,12 @@ def add_comment(info):
 def add_follow(info):
     info["Following Time"] = get_time()
     insert_item('Follow', info)
+
+
+def remove_special_characters(input_string):
+    # 使用正则表达式将特殊字符替换为空字符串
+    sanitized_string = re.sub(r'[^a-zA-Z0-9\s]', '', input_string)
+    return sanitized_string
 
 
 def close_conn():

@@ -158,6 +158,12 @@ def login():
     password = request.json.get('password')
     print("login {} {}".format(username, password))
     user_info = util.get_user_info_by_name(username)
+    check_name, check_pass = util.remove_special_characters(
+        username), util.remove_special_characters(password)
+    if username != check_name or check_pass != password:
+        return jsonify(error="输入不能包含特殊字符")
+    if len(username)>20 or len(password)>20:
+        return jsonify(error="输入太长")
     # Check if the username and password match a database record
     # For the sake of simplicity, let's assume a hardcoded username and password
     if len(user_info['User ID']
@@ -173,6 +179,11 @@ def signup():
     username = request.json.get('username')
     password = request.json.get('password')
     print("signup {} {}".format(username, password))
+    check_name,check_pass=util.remove_special_characters(username),util.remove_special_characters(password)
+    if username!=check_name or check_pass!=password:
+        return jsonify(error="输入不能包含特殊字符")
+    if len(username) > 20 or len(password) > 20:
+        return jsonify(error="输入太长")
     util.user_register({'User Name': username, 'Password': password})
     # Store it in database
     log_the_user_in(username)
