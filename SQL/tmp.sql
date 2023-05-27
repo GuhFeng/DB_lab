@@ -3,6 +3,9 @@ WHERE [User ID]>101;
 
 SELECT *
 FROM [COMMENT];
+SELECT COUNT(*)
+FROM [Follow]
+WHERE [Followed ID]=1 and [Following ID]=1;
 
 INSERT INTO [User]
     ([User ID],[User Name],[Creating Time],[Password])
