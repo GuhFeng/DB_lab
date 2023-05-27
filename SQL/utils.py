@@ -91,6 +91,14 @@ def get_comment_info_by_pid(pid):
     return dct
 
 
+def get_user_info_by_name(name: str):
+    cursor.execute(f"SELECT * from [User] where [User Name]='{name}'")
+    rows = list(cursor.fetchall())
+    columns = get_columns_name("User")
+    rows = [process_str(row) for row in rows]
+    return pack(rows, columns)
+
+
 def user_register(info: dict):
     columns = ",".join([f"[{i}]" for i in info.keys()])
     values = ",".join(
@@ -107,7 +115,6 @@ def insert_item(table, itm: dict):
     print(f"INSERT INTO [{table}] ({columns}) VALUES ({values})")
     cursor.execute(f"INSERT INTO [User] ({columns}) VALUES ({values})")
     cursor.commit()
-
 
 def close_conn():
     sql_server_conn.close()
