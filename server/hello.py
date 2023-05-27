@@ -15,14 +15,14 @@ app.secret_key = "your_secret_key"  # Set a secret key for session encryption
 def log_the_user_in(username):
     # Perform necessary actions to log the user in
     # This could include setting session variables, generating tokens, etc.
+    print("\nlogin seccuss")
     session['username'] = username
 
 
 def getuid(username):
-    if username == 'admin':
-        return 1
-    else:
+    if username == None:
         return 0
+    return int(util.get_user_info_by_name(username)["User ID"][0])
 
 
 @app.route('/')
@@ -56,7 +56,8 @@ def show_post(pid):
     user_names = [
         util.get_user_info_by_uid(uid)['User Name'][0] for uid in user_id
     ]
-    post_info = {k: v[0] for k, v in post_info.items()}
+    print(post_info)
+    post_info = {k: v[0] if v != None else None for k, v in post_info.items()}
     post_info['User'] = util.get_user_info_by_uid(
         post_info['User ID'][0])['User Name'][0]
     reply_info = {
@@ -107,15 +108,17 @@ def postnew1():
     return render_template('posts.html', uid=getuid(username), title='发帖')
 
 
-def add_post(a, b):
-    return 1
+def add_post(a, b, c):
+    return util.add_post({"Content": b, "PostTitle": a, "User ID": c})
 
 
 @app.route('/postnew', methods=['POST'])
 def postnew():
+    username = session.get('username')
+    uid = getuid(username)
     title = request.json.get('title')
     content = request.json.get('content')
-    pid = add_post(title, content)
+    pid = add_post(title, content, uid)
     return jsonify(success=True, pid=pid)
 
 
@@ -143,12 +146,11 @@ def login():
     username = request.json.get('username')
     password = request.json.get('password')
     print("login {} {}".format(username, password))
-
+    user_info = util.get_user_info_by_name(username)
     # Check if the username and password match a database record
     # For the sake of simplicity, let's assume a hardcoded username and password
-    valid_username = "admin"
-    valid_password = "password"
-    if username == valid_username and password == valid_password:
+    if len(user_info['User ID']
+           ) != 0 and password == user_info['Password'][0].split(' ')[0]:
         log_the_user_in(username)  # Call the login function
         return jsonify(success=True)
     else:
@@ -160,7 +162,9 @@ def signup():
     username = request.json.get('username')
     password = request.json.get('password')
     print("signup {} {}".format(username, password))
+    util.user_register({'User Name': username, 'Password': password})
     # Store it in database
+    log_the_user_in(username)
     return jsonify(success=True)
 
 

@@ -1,4 +1,5 @@
 import pyodbc
+from datetime import datetime
 
 sql_server_conn = pyodbc.connect(
     "DRIVER={SQL Server};SERVER=127.0.0.1;DATABASE=BBS;UID=fgh;PWD=1234")
@@ -100,6 +101,9 @@ def get_user_info_by_name(name: str):
 
 
 def user_register(info: dict):
+    cursor.execute("SELECT COUNT(*) FROM [User]")
+    num = list(cursor.fetchall())
+    info["User ID"] = num[0][0] + 1
     columns = ",".join([f"[{i}]" for i in info.keys()])
     values = ",".join(
         [str(i) if type(i) != str else f"'{i}'" for i in info.values()])
@@ -113,8 +117,52 @@ def insert_item(table, itm: dict):
     values = ",".join(
         [str(i) if type(i) != str else f"'{i}'" for i in itm.values()])
     print(f"INSERT INTO [{table}] ({columns}) VALUES ({values})")
-    cursor.execute(f"INSERT INTO [User] ({columns}) VALUES ({values})")
+    cursor.execute(f"INSERT INTO [{table}] ({columns}) VALUES ({values})")
     cursor.commit()
+
+
+def get_time():
+    current_time = datetime.now()
+    return current_time.isoformat(sep=' ').split('.')[0]
+
+
+def add_post(info: dict):
+    cursor.execute("SELECT COUNT(*) FROM [Post]")
+    num = list(cursor.fetchall())
+    info["Post ID"] = num[0][0] + 1
+    info["Post time"] = get_time()
+    content = info.pop("Content")
+    insert_item('Post', info)
+    chunks = []
+    for i in range(0, len(content), 200):
+        chunks.append(content[i:i + 200])
+    for i in range(len(chunks)):
+        cursor.execute("SELECT COUNT(*) FROM [Post Content]")
+        num = list(cursor.fetchall())
+        insert_item(
+            "Post Content", {
+                "Post ID": info["Post ID"],
+                "Index": num[0][0] + 1,
+                "Content": chunks[i]
+            })
+    return info["Post ID"]
+
+
+def add_comment(info):
+    cursor.execute("SELECT COUNT(*) FROM [Comment]")
+    num = list(cursor.fetchall())
+    info["Comment ID"] = num[0][0] + 1
+    info['Comment Time'] = get_time()
+    insert_item('Comment', info)
+
+
+def add_follow(info):
+    info["Following Time"] = get_time()
+    insert_item('Follow', info)
+
 
 def close_conn():
     sql_server_conn.close()
+
+
+print(get_time())
