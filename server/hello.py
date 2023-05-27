@@ -67,7 +67,11 @@ def show_post(pid):
         for i in range(len(reply["Comment_Content"]))
     }
     # show the user profile for that user
-    return render_template('post.html', replys=reply_info, post_info=post_info, pid=pid)
+    return render_template('post.html',
+                           replys=reply_info,
+                           post_info=post_info,
+                           pid=pid,
+                           uid=currentid)
 
 
 @app.route('/posts')
@@ -120,17 +124,17 @@ def postnew():
     return jsonify(success=True, pid=pid)
 
 
-@app.route('/replynew', methods=['POST'])
-def replynew():
-    username = session.get('username')
-    uid = getuid(username)
-    content = request.json.get('content')
+@app.route('/reply', methods=['POST'])
+def reply():
+    uid = session.get('uid')
+    pid = session.get('pid')
+    content = request.json.get('replyText')
     util.add_comment({
         "User ID": uid,
-        "Post ID": 102,
+        "Post ID": pid,
         "Comment_Content": content
     })
-    return jsonify(success=True, pid=102)
+    return jsonify(success=True, pid=pid)
 
 
 @app.route('/users')
@@ -162,7 +166,7 @@ def login():
         username), util.remove_special_characters(password)
     if username != check_name or check_pass != password:
         return jsonify(error="输入不能包含特殊字符")
-    if len(username)>20 or len(password)>20:
+    if len(username) > 20 or len(password) > 20:
         return jsonify(error="输入太长")
     # Check if the username and password match a database record
     # For the sake of simplicity, let's assume a hardcoded username and password
@@ -179,8 +183,9 @@ def signup():
     username = request.json.get('username')
     password = request.json.get('password')
     print("signup {} {}".format(username, password))
-    check_name,check_pass=util.remove_special_characters(username),util.remove_special_characters(password)
-    if username!=check_name or check_pass!=password:
+    check_name, check_pass = util.remove_special_characters(
+        username), util.remove_special_characters(password)
+    if username != check_name or check_pass != password:
         return jsonify(error="输入不能包含特殊字符")
     if len(username) > 20 or len(password) > 20:
         return jsonify(error="输入太长")
