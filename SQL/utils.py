@@ -155,6 +155,14 @@ def add_comment(info):
     insert_item('Comment', info)
 
 
+def if_follow(uid1, uid2):
+    cursor.execute(
+        f"SELECT COUNT(*) FROM [Follow] where [Followed ID]={uid1},[Following] ID]={uid2}"
+    )
+    num = list(cursor.fetchall())
+    return num[0][0] != 0
+
+
 def add_follow(info):
     info["Following Time"] = get_time()
     insert_item('Follow', info)
