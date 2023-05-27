@@ -169,6 +169,13 @@ def add_follow(info):
     insert_item('Follow', info)
 
 
+def delete_follow(uid, targetid):
+    cursor.execute(
+        f"DELETE FROM [Follow] WHERE [Followed ID]={uid} and [Following ID]={targetid};"
+    )
+    cursor.commit()
+
+
 def remove_special_characters(input_string):
     # 使用正则表达式将特殊字符替换为空字符串
     sanitized_string = re.sub(r'[^a-zA-Z0-9\s]', '', input_string)

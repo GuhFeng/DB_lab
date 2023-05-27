@@ -76,26 +76,27 @@ def show_post(pid):
                                                   post_info['User ID']))
 
 
-@app.route('/follow')
+@app.route('/follow', methods=['POST'])
 def follow():
     uid = getuid(session.get('username'))
     targetid = request.json.get('targetid')
     print("{} follows {}".format(uid, targetid))
     if util.if_follow(uid, targetid):
         return jsonify(error='您已关注')
+    print("hasn't follow\n")
     util.add_follow({"Followed ID": uid, "Following ID": targetid})
 
     return jsonify(success=True)
 
 
-@app.route('/disfollow')
+@app.route('/disfollow', methods=['POST'])
 def disfollow():
     uid = getuid(session.get('username'))
     targetid = request.json.get('targetid')
     print("{} disfollows {}".format(uid, targetid))
     if not util.if_follow(uid, targetid):
         return jsonify(error='您未关注')
-    util.add_follow({"Followed ID": uid, "Following ID": targetid})
+    util.delete_follow(uid, targetid)
 
     return jsonify(success=True)
 
@@ -169,7 +170,7 @@ def show_users():
     currentid = getuid(session.get('username'))
     if currentid == 0:
         return render_template('visitor.html')
-    users = util.get_following(22)
+    users = util.get_following(currentid)
     ks = users.keys()
     users = {
         f'user{i}': {k: users[k][i]

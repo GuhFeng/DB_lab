@@ -40,6 +40,12 @@
             <button id="disFollowButton" class="btn btn-secondary" onclick="disfollow({{post_info['User ID']}})">已关注</button>
             `;
           }
+          else if (response.error=='您已关注'){
+            // You can redirect the user or perform other actions here
+            document.getElementById("follow").innerHTML = `
+            <button id="disFollowButton" class="btn btn-secondary" onclick="disfollow({{post_info['User ID']}})">已关注</button>
+            `;
+          }
         } else {
           // Handle non-200 response
           console.log('Reply request failed with status: ' + xhr.status);
@@ -66,7 +72,7 @@
           var response = JSON.parse(xhr.responseText);
           if (response.success) {
             // Signup success logic
-            console.log('Follow successful');
+            console.log('Disfollow successful');
             // You can redirect the user or perform other actions here
             document.getElementById("follow").innerHTML = `
             <button id="followButton" class="btn btn-primary" onclick="follow({{post_info['User ID']}})">+关注</button>
