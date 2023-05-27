@@ -107,7 +107,6 @@ def user_register(info: dict):
     columns = ",".join([f"[{i}]" for i in info.keys()])
     values = ",".join(
         [str(i) if type(i) != str else f"'{i}'" for i in info.values()])
-    print(f"INSERT INTO [User] ({columns}) VALUES ({values})")
     cursor.execute(f"INSERT INTO [User] ({columns}) VALUES ({values})")
     cursor.commit()
 
@@ -116,7 +115,6 @@ def insert_item(table, itm: dict):
     columns = ",".join([f"[{i}]" for i in itm.keys()])
     values = ",".join(
         [str(i) if type(i) != str else f"'{i}'" for i in itm.values()])
-    print(f"INSERT INTO [{table}] ({columns}) VALUES ({values})")
     cursor.execute(f"INSERT INTO [{table}] ({columns}) VALUES ({values})")
     cursor.commit()
 
@@ -163,6 +161,3 @@ def add_follow(info):
 
 def close_conn():
     sql_server_conn.close()
-
-
-print(get_time())

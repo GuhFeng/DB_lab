@@ -55,9 +55,7 @@ def show_post(pid):
     user_names = [
         util.get_user_info_by_uid(uid)['User Name'][0] for uid in user_id
     ]
-    print(post_info)
     post_info = {k: v[0] for k, v in post_info.items()}
-    print(post_info['User ID'])
     post_info['User'] = util.get_user_info_by_uid(
         post_info['User ID'])['User Name'][0]
     reply_info = {
@@ -127,7 +125,6 @@ def replynew():
     username = session.get('username')
     uid = getuid(username)
     content = request.json.get('content')
-    print('content')
     util.add_comment({
         "User ID": uid,
         "Post ID": 102,
