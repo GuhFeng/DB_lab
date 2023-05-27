@@ -13,9 +13,10 @@
   {% for post_id, post_info in posts.items() %}
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">{{ post_info['PostTitle'] }}</h5>
-      <p class="card-text">{{ post_info['User'] }}</p>
-      <p class="card-text">{{ post_info['Content'] }}</p>
+      <h5 class="card-title">标题： {{ post_info['PostTitle'] }}</h5>
+      <p class="card-text">用户： {{ post_info['User'] }}</p>
+      <p class="card-text">时间： {{ post_info['time'] }}</p>
+      <p class="card-text">内容 {{ post_info['Content'] }}</p>
       <a class="nav-link" href="{{ url_for('show_post', pid=post_info['ID']) }}">阅读更多</a>
     </div>
   </div>

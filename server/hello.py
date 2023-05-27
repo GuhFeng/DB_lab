@@ -86,6 +86,7 @@ def show_posts():
             'PostTitle': posts['PostTitle'][i],
             'Content': posts['Content'][i],
             'ID': posts['Post ID'][i],
+            'time': posts['Post time'][i],
             'User': user_names[i]
         }
         for i in range(len(posts["Content"]))
