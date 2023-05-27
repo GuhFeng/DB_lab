@@ -9,9 +9,13 @@
       {% for k,v in post_info.items() %}
       <p class="card-text">{{k}} {{ v}}</p>
       {% endfor %}
+      <div class="card-text row-thin">
+        <span id="follow_msg"></span>
+      </div>
       <div class="card-text" id="follow">
         {% if followed %}
-        <button id="disFollowButton" class="btn btn-secondary" onclick="disfollow({{post_info['User ID']}})">已关注</button>
+        <button id="disFollowButton" class="btn btn-secondary"
+          onclick="disfollow({{post_info['User ID']}})">已关注</button>
         {% else %}
         <button id="followButton" class="btn btn-primary" onclick="follow({{post_info['User ID']}})">+关注</button>
         {% endif %}
@@ -35,16 +39,21 @@
           if (response.success) {
             // Signup success logic
             console.log('Follow successful');
+            document.getElementById('follow_msg').textContent = '';
             // You can redirect the user or perform other actions here
             document.getElementById("follow").innerHTML = `
-            <button id="disFollowButton" class="btn btn-secondary" onclick="disfollow({{post_info['User ID']}})">已关注</button>
+              <button id="disFollowButton" class="btn btn-secondary" onclick="disfollow({{post_info['User ID']}})">已关注</button>
             `;
           }
-          else if (response.error=='您已关注'){
-            // You can redirect the user or perform other actions here
-            document.getElementById("follow").innerHTML = `
-            <button id="disFollowButton" class="btn btn-secondary" onclick="disfollow({{post_info['User ID']}})">已关注</button>
-            `;
+          else {
+            var error_message = response.error;
+            document.getElementById('follow_msg').textContent = error_message;
+            if (response.error == '您已关注') {
+              // You can redirect the user or perform other actions here
+              document.getElementById("follow").innerHTML = `
+                <button id="disFollowButton" class="btn btn-secondary" onclick="disfollow({{post_info['User ID']}})">已关注</button>
+              `;
+            }
           }
         } else {
           // Handle non-200 response
@@ -73,10 +82,21 @@
           if (response.success) {
             // Signup success logic
             console.log('Disfollow successful');
+            document.getElementById('follow_msg').textContent = '';
             // You can redirect the user or perform other actions here
             document.getElementById("follow").innerHTML = `
             <button id="followButton" class="btn btn-primary" onclick="follow({{post_info['User ID']}})">+关注</button>
             `;
+          }
+          else {
+            var error_message = response.error;
+            document.getElementById('follow_msg').textContent = error_message;
+            if (response.error == '您未关注') {
+              // You can redirect the user or perform other actions here
+              document.getElementById("follow").innerHTML = `
+                <button id="disFollowButton" class="btn btn-secondary" onclick="disfollow({{post_info['User ID']}})">已关注</button>
+              `;
+            }
           }
         } else {
           // Handle non-200 response
@@ -99,15 +119,15 @@
 <!-- 主要内容 -->
 <div class="container mt-4">
   <h2>回复</h2>
-	{% for reply_id, reply_info in replys.items() %}
-	<div class="card">
-		<div class="card-body">
-			<p class="card-text">时间: {{ reply_info['Content'] }}</p>
-			<p class="card-text">用户: {{ reply_info['User'] }}</p>
-			<p class="card-text">回复：{{ reply_info['Time'] }}</p>
-		</div>
-	</div>
-	{% endfor %}
+  {% for reply_id, reply_info in replys.items() %}
+  <div class="card">
+    <div class="card-body">
+      <p class="card-text">时间: {{ reply_info['Content'] }}</p>
+      <p class="card-text">用户: {{ reply_info['User'] }}</p>
+      <p class="card-text">回复：{{ reply_info['Time'] }}</p>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 
 <div class="container mt-4">
