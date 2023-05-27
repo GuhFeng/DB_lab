@@ -64,7 +64,7 @@ def get_recent_posts(num):
 
 def get_following(uid):
     cursor.execute(
-        f"SELECT [Followed ID],[Following Time] from [Follow] where [Following ID]={uid} ORDER BY [Following Time]"
+        f"SELECT [Following ID],[Following Time] from [Follow] where [Followed ID]={uid} ORDER BY [Following Time]"
     )
     rows = list(cursor.fetchall())
     columns = get_columns_name("User")

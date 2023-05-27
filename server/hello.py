@@ -177,6 +177,7 @@ def show_users():
                      for k in ks}
         for i in range(len(users["User ID"]))
     }
+    print(users)
     username = session.get('username')
     return render_template('users.html',
                            users=users,
