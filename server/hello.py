@@ -6,7 +6,7 @@ import os
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
-# import SQL.utils as util
+import SQL.utils as util
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Set a secret key for session encryption
@@ -47,13 +47,11 @@ def show_user_profile(uid):
 
 @app.route('/post/<pid>')
 def show_post(pid):
-    print(pid)
     currentid = getuid(session.get('username'))
     if currentid == 0:
         return render_template('visitor.html')
     post_info = util.get_post_info_by_pid(pid)
     reply = util.get_comment_info_by_pid(2)
-    print(reply)
     post_info = {k: v[0] for k, v in post_info.items()}
     reply_info = {
         f'reply{i}': {
@@ -87,15 +85,18 @@ def show_posts():
                            title='最新帖子')
 
 
-@app.route('/postnew', methods=['GET'])
-def postnew():
+@app.route('/postnew1', methods=['GET'])
+def postnew1():
     currentid = getuid(session.get('username'))
     if currentid == 0:
         return render_template('visitor.html')
     username = session.get('username')
-    return render_template('postnew.html',
-                           uid=getuid(username),
-                           title='发帖')
+    return render_template('posts.html', uid=getuid(username), title='发帖')
+
+
+def add_post(a, b):
+    return 1
+
 
 @app.route('/postnew', methods=['POST'])
 def postnew():
@@ -103,6 +104,7 @@ def postnew():
     content = request.json.get('content')
     pid = add_post(title, content)
     return jsonify(success=True, pid=pid)
+
 
 @app.route('/users')
 def show_users():
@@ -133,7 +135,6 @@ def login():
     # For the sake of simplicity, let's assume a hardcoded username and password
     valid_username = "admin"
     valid_password = "password"
-
     if username == valid_username and password == valid_password:
         log_the_user_in(username)  # Call the login function
         return jsonify(success=True)
