@@ -42,7 +42,10 @@ def show_user_profile(uid):
     user_info = {k: v[0] for k, v in user_info.items()}
     user_info.pop("Password")
     # show the user profile for that user
-    return render_template('user.html', user_info=user_info, title='用户信息')
+    return render_template('user.html',
+                           user_info=user_info,
+                           title='用户信息',
+                           uid=uid)
 
 
 @app.route('/post/<pid>')
