@@ -6,9 +6,13 @@
   <h2>帖子</h2>
   <div class="card">
     <div class="card-body">
-      {% for k,v in post_info.items() %}
-      <p class="card-text">{{k}} {{ v}}</p>
-      {% endfor %}
+      <p class="card-text">标题:  {{post_info["PostTitle"]}}</p>
+      <p> </p>
+      <p class="card-text">内容: {{post_info["Content"]}} </p>
+      <p> </p>
+      <p class="card-text">时间:  {{post_info["Post time"]}}</p>
+      <p class="card-text">用户:  {{post_info["User"]}}</p>
+
       <div class="card-text row-thin">
         <span id="follow_msg"></span>
       </div>
@@ -122,9 +126,9 @@
   {% for reply_id, reply_info in replys.items() %}
   <div class="card">
     <div class="card-body">
+      <p class="card-text">回复：{{ reply_info['Time'] }}</p>
       <p class="card-text">时间: {{ reply_info['Content'] }}</p>
       <p class="card-text">用户: {{ reply_info['User'] }}</p>
-      <p class="card-text">回复：{{ reply_info['Time'] }}</p>
     </div>
   </div>
   {% endfor %}

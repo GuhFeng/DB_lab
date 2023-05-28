@@ -107,6 +107,7 @@ def user_register(info: dict):
     cursor.execute("SELECT COUNT(*) FROM [User]")
     num = list(cursor.fetchall())
     info["User ID"] = num[0][0] + 1
+    info["Creating Time"] = get_time()
     columns = ",".join([f"[{i}]" for i in info.keys()])
     values = ",".join(
         [str(i) if type(i) != str else f"'{i}'" for i in info.values()])

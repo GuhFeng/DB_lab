@@ -10,9 +10,8 @@
 	  {% for user_id, user in users.items() %}
 	  <div class="card">
 		  <div class="card-body">
-        {% for k,v in user.items() %}
-			<p class="card-text">{{k}}  {{ v}}</p>
-			{% endfor %}
+			<p class="card-text">用户:  {{ user["User Name"]}}</p>
+			<p class="card-text">关注时间:  {{ user["Following Time"]}}</p>
 		  </div>
 	  </div>
 	  {% endfor %}
