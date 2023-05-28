@@ -67,11 +67,13 @@ def get_following(uid):
         f"SELECT [Following ID],[Following Time] from [Follow] where [Followed ID]={uid} ORDER BY [Following Time]"
     )
     rows = list(cursor.fetchall())
-    columns = get_columns_name("User")
+    columns = [i for i in get_columns_name("User") if i != 'Password']
     dct = {c: [] for c in columns}
     dct["Following Time"] = [row[1] for row in rows]
     for i in [int((row[0])) for row in rows]:
         for k, v in get_user_info_by_uid(i).items():
+            if k == 'Password':
+                continue
             dct[k] += v
     return dct
 
@@ -136,7 +138,9 @@ def add_post(info: dict):
     for i in range(0, len(content), 200):
         chunks.append(content[i:i + 200])
     for i in range(len(chunks)):
-        cursor.execute("SELECT COUNT(*) FROM [Post Content]")
+        pid = info["Post ID"]
+        cursor.execute(
+            f"SELECT COUNT(*) FROM [Post Content] WHERE [Post ID]={pid}")
         num = list(cursor.fetchall())
         insert_item(
             "Post Content", {
@@ -147,8 +151,9 @@ def add_post(info: dict):
     return info["Post ID"]
 
 
-def add_comment(info):
-    cursor.execute("SELECT COUNT(*) FROM [Comment]")
+def add_comment(info: dict):
+    pid = info["Post ID"]
+    cursor.execute(f"SELECT COUNT(*) FROM [Comment] WHERE [Post ID]={pid}")
     num = list(cursor.fetchall())
     info["Coment ID"] = num[0][0] + 1
     info['Comment Time'] = get_time()
