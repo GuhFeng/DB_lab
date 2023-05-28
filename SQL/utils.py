@@ -164,7 +164,6 @@ def if_follow(uid1, uid2):
 
 
 def add_follow(info):
-    print(info)
     info["Following Time"] = get_time()
     insert_item('Follow', info)
 

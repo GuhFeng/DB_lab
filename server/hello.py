@@ -81,10 +81,8 @@ def show_post(pid):
 def follow():
     uid = getuid(session.get('username'))
     targetid = request.json.get('targetid')
-    print("{} follows {}".format(uid, targetid))
     if util.if_follow(uid, targetid):
         return jsonify(error='您已关注')
-    print("hasn't follow\n")
     util.add_follow({"Followed ID": uid, "Following ID": targetid})
 
     return jsonify(success=True)
@@ -94,7 +92,6 @@ def follow():
 def disfollow():
     uid = getuid(session.get('username'))
     targetid = request.json.get('targetid')
-    print("{} disfollows {}".format(uid, targetid))
     if not util.if_follow(uid, targetid):
         return jsonify(error='您未关注')
     util.delete_follow(uid, targetid)
@@ -157,7 +154,6 @@ def reply():
     uid = request.json.get('uid')
     pid = request.json.get('pid')
     content = request.json.get('replyText')
-    print(uid, pid, content)
     util.add_comment({
         "User ID": uid,
         "Post ID": pid,
@@ -210,7 +206,6 @@ def login():
 def signup():
     username = request.json.get('username')
     password = request.json.get('password')
-    print("signup {} {}".format(username, password))
     check_name, check_pass = util.remove_special_characters(
         username), util.remove_special_characters(password)
     if username != check_name or check_pass != password:
