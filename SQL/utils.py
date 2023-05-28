@@ -64,18 +64,12 @@ def get_recent_posts(num):
 
 def get_following(uid):
     cursor.execute(
-        f"SELECT [Following ID],[Following Time] from [Follow] where [Followed ID]={uid} ORDER BY [Following Time]"
+        f"SELECT * from [follow_view] where [Followed ID]={uid} ORDER BY [Following Time]"
     )
     rows = list(cursor.fetchall())
-    columns = [i for i in get_columns_name("User") if i != 'Password']
-    dct = {c: [] for c in columns}
-    dct["Following Time"] = [row[1] for row in rows]
-    for i in [int((row[0])) for row in rows]:
-        for k, v in get_user_info_by_uid(i).items():
-            if k == 'Password':
-                continue
-            dct[k] += v
-    return dct
+    columns = [i for i in get_columns_name("follow_view") if i != 'Password']
+    rows = [process_str(row) for row in rows]
+    return pack(rows, columns)
 
 
 def get_comment_info_by_pid(pid):
@@ -180,6 +174,12 @@ def delete_follow(uid, targetid):
         f"DELETE FROM [Follow] WHERE [Followed ID]={uid} and [Following ID]={targetid};"
     )
     cursor.commit()
+
+
+def get_password(uid):
+    cursor.execute(f"EXEC get_password @uid = {uid}")
+    password = list(cursor.fetchall())[0][0].split(" ")[0]
+    return password
 
 
 def remove_special_characters(input_string):
