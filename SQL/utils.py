@@ -178,7 +178,10 @@ def delete_follow(uid, targetid):
 
 def get_password(uid):
     cursor.execute(f"EXEC get_password @uid = {uid}")
-    password = list(cursor.fetchall())[0][0].split(" ")[0]
+    password = list(cursor.fetchall())
+    if len(password) == 0:
+        return "[]"
+    password = password[0][0].split(" ")[0]
     return password
 
 

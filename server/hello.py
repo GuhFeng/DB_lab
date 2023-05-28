@@ -189,7 +189,6 @@ def show_users():
 def login():
     username = request.json.get('username')
     password = request.json.get('password')
-    print("login {} {}".format(username, password))
     user_info = util.get_user_info_by_name(username)
     check_name, check_pass = util.remove_special_characters(
         username), util.remove_special_characters(password)
@@ -199,8 +198,8 @@ def login():
         return jsonify(error="输入太长")
     # Check if the username and password match a database record
     # For the sake of simplicity, let's assume a hardcoded username and password
-    if len(user_info['User ID']
-           ) != 0 and password == user_info['Password'][0].split(' ')[0]:
+    if len(user_info['User ID']) != 0 and password == util.get_password(
+            user_info["User ID"][0]):
         log_the_user_in(username)  # Call the login function
         return jsonify(success=True)
     else:
